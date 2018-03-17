@@ -28,7 +28,7 @@ class TransactionList extends Component {
       <Container>
         <TransactionListMenu/>
         <Row>
-          <table class="table">
+          <table className="table">
             <thead>
               <tr>
                 <th scope="col">Date</th>
