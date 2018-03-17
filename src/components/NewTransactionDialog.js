@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalFooter, ModalBody, Button, Form, FormGroup, Label, Col, Input } from 'reactstrap';
+import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from 'reactstrap';
+import TransactionList from './TransactionList';
+import TransactionForm from './TransactionForm';
 
 class NewTransactionDialog extends Component {
   constructor(props) {
@@ -25,32 +27,7 @@ class NewTransactionDialog extends Component {
       <Modal isOpen={this.props.isOpen} toggle={this.cancel} centered={true} fade={false}>
         <ModalHeader toggle={this.cancel}>New transaction</ModalHeader>
         <ModalBody>
-          <Form>
-            <FormGroup row>
-              <Label for="date" sm={labelColumns}>Date</Label>
-              <Col sm={contentColumns}>
-                <Input type="date" name="date" id="date" />
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="merchant" sm={labelColumns}>Merchant</Label>
-              <Col sm={contentColumns}>
-                <Input type="text" name="merchant" id="merchant" />
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="amount" sm={labelColumns}>Amount</Label>
-              <Col sm={contentColumns}>
-                <Input type="number" name="amount" id="amount" />
-              </Col>
-            </FormGroup>
-            <FormGroup row>
-              <Label for="comment" sm={labelColumns}>Commentary</Label>
-              <Col sm={contentColumns}>
-                <Input type="textarea" name="comment" id="comment" />
-              </Col>
-            </FormGroup>
-          </Form>
+          <TransactionForm/>
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={this.cancel}>Cancel</Button>{' '}
