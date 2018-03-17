@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Col, Input } from 'reactstrap';
 
+function coerceTransaction(tx) {
+  const result = Object.assign({}, tx);
+  result.amount = Number(result.amount);
+  return result;
+}
+
 class TransactionForm extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
   }
   onChange(ev) {
-    const newTx = Object.assign({}, this.props, {[ev.target.name]: ev.target.value});
+    const newTx = coerceTransaction(Object.assign({}, this.props.tx, {[ev.target.name]: ev.target.value}));
     this.props.onChange(newTx);
   }
   render() {

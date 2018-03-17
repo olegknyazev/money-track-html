@@ -13,15 +13,16 @@ class TransactionListMenu extends Component {
     this.setState({ adding: true });
   }
   addDialogDone(result) {
-    console.log("RESULT: " + result);
     this.setState({ adding: false });
+    if (result)
+      this.props.onNewTransaction(result);
   }
   render() {
     return (
       <div>
         <Row>
           <Col />
-          <Col xs="2">
+          <Col xs='2'>
             <Button onClick={this.showAddDialog}>Add</Button>
           </Col>
         </Row>

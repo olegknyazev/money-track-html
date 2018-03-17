@@ -16,6 +16,7 @@ class TransactionList extends Component {
   constructor(props) {
     super(props);
     this.state = {transactions: []};
+    this.addTransaction = this.addTransaction.bind(this);
   }
   componentDidMount() {
     fetch("/transaction").then(r => r.json()).then(ts => this.setTransactions(ts));
@@ -23,10 +24,19 @@ class TransactionList extends Component {
   setTransactions(transactions) {
     this.setState({transactions});
   }
+  addTransaction(tx) {
+    fetch('/transaction/new', {
+      method: 'POST',
+      body: JSON.stringify(tx),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    });
+  }
   render() {
     return (
       <Container>
-        <TransactionListMenu/>
+        <TransactionListMenu onNewTransaction={this.addTransaction}/>
         <Row>
           <table className="table">
             <thead>
