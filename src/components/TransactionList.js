@@ -4,7 +4,7 @@ import TransactionListMenu from './TransactionListMenu';
 
 function TransactionRow({ tx }) {
   return (
-    <tr>
+    <tr className={tx.confirmed ? null : 'unconfirmed'}>
       <td>{tx.date}</td>
       <td>{tx.merchant}</td>
       <td>{tx.amount}</td>
@@ -12,26 +12,37 @@ function TransactionRow({ tx }) {
   );
 }
 
+function confirmed(tx) {
+  return Object.assign({}, tx, { confirmed: true });
+}
+
 class TransactionList extends Component {
   constructor(props) {
     super(props);
-    this.state = {transactions: []};
+    this.state = { transactions: [] };
     this.addTransaction = this.addTransaction.bind(this);
   }
   componentDidMount() {
     fetch("/transaction").then(r => r.json()).then(ts => this.setTransactions(ts));
   }
-  setTransactions(transactions) {
-    this.setState({transactions});
+  setTransactions(txs) {
+    this.setState({ transactions: txs.map(confirmed) });
   }
   addTransaction(tx) {
+    this.setState({ transactions: this.state.transactions.concat(tx) });
     fetch('/transaction/new', {
       method: 'POST',
       body: JSON.stringify(tx),
       headers: new Headers({
         'Content-Type': 'application/json'
       })
+    }).then(r => {
+      if (r.ok)
+        this.setState({ transactions: this.state.transactions.map(t => t == tx ? confirmed(t) : t) });
+      else
+        throw new Error('Network response was not ok.');
     });
+    // TODO stop pending fetches on unmount
   }
   render() {
     return (
