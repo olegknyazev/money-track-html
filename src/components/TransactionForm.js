@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Col, Input } from 'reactstrap';
+import { set } from 'immutable';
 
 function coerceTransaction(tx) {
-  const result = Object.assign({}, tx);
-  result.amount = Number(result.amount);
-  return result;
+  return set(tx, 'amount', Number(tx.amount));
 }
 
 class TransactionForm extends Component {
@@ -13,7 +12,7 @@ class TransactionForm extends Component {
     this.onChange = this.onChange.bind(this);
   }
   onChange(ev) {
-    const newTx = coerceTransaction(Object.assign({}, this.props.tx, {[ev.target.name]: ev.target.value}));
+    const newTx = coerceTransaction(set(this.props.tx, ev.target.name, ev.target.value));
     this.props.onChange(newTx);
   }
   render() {

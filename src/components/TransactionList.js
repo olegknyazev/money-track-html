@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
+import { set } from 'immutable';
 import TransactionListMenu from './TransactionListMenu';
 
 function TransactionRow({ tx }) {
@@ -13,7 +14,7 @@ function TransactionRow({ tx }) {
 }
 
 function confirmed(tx) {
-  return Object.assign({}, tx, { confirmed: true });
+  return set(tx, 'confirmed', true);
 }
 
 class TransactionList extends Component {
