@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import NewTransactionDialog from './NewTransactionDialog';
 
-class TransactionListMenu extends Component {
+export default class TransactionListMenu extends Component {
   constructor(props) {
     super(props);
     this.state = { adding: false };
@@ -31,5 +31,3 @@ class TransactionListMenu extends Component {
     );
   }
 }
-
-export default TransactionListMenu;

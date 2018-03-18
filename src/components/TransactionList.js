@@ -17,7 +17,7 @@ function confirmed(tx) {
   return set(tx, 'confirmed', true);
 }
 
-class TransactionList extends Component {
+export default class TransactionList extends Component {
   constructor(props) {
     super(props);
     this.state = { transactions: [] };
@@ -69,5 +69,3 @@ class TransactionList extends Component {
     );
   }
 }
-
-export default TransactionList;

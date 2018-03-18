@@ -6,7 +6,7 @@ function coerceTransaction(tx) {
   return set(tx, 'amount', Number(tx.amount));
 }
 
-class TransactionForm extends Component {
+export default class TransactionForm extends Component {
   constructor(props) {
     super(props);
     this.onChange = this.onChange.bind(this);
@@ -49,5 +49,3 @@ class TransactionForm extends Component {
     );
   }
 }
-
-export default TransactionForm;

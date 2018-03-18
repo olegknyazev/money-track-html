@@ -16,7 +16,7 @@ function emptyTransaction() {
   };
 }
 
-class NewTransactionDialog extends Component {
+export default class NewTransactionDialog extends Component {
   constructor(props) {
     super(props);
     this.state = { tx: emptyTransaction() };
@@ -54,5 +54,3 @@ class NewTransactionDialog extends Component {
     );
   }
 }
-
-export default NewTransactionDialog;
