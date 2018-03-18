@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Table, Row, Col, Button } from 'reactstrap';
 import { set } from 'immutable';
 import TransactionListMenu from './TransactionListMenu';
 
 function TransactionRow({ tx }) {
   return (
-    <tr className={tx.confirmed ? null : 'unconfirmed'}>
+    <tr className={tx.confirmed ? null : 'text-muted'}>
       <td>{tx.date}</td>
       <td>{tx.merchant}</td>
       <td>{tx.amount}</td>
@@ -50,7 +50,7 @@ export default class TransactionList extends Component {
       <Container>
         <TransactionListMenu onNewTransaction={this.addTransaction}/>
         <Row>
-          <table className="table">
+          <Table>
             <thead>
               <tr>
                 <th scope="col">Date</th>
@@ -63,7 +63,7 @@ export default class TransactionList extends Component {
                 return <TransactionRow tx={tx}/>
               })}
             </tbody>
-          </table>
+          </Table>
         </Row>
       </Container>
     );
