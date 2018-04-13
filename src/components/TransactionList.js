@@ -3,6 +3,7 @@ import { Container, Table, Row, Col, Button } from 'reactstrap';
 import { set } from 'immutable';
 import TransactionListMenu from './TransactionListMenu';
 import TransactionDialog from './TransactionDialog';
+import transaction from '../transaction';
 
 function TransactionRow({ tx, onClick }) {
   return (
@@ -29,28 +30,19 @@ export default class TransactionList extends Component {
     this.addTransaction = this.addTransaction.bind(this);
     this.editTransaction = this.editTransaction.bind(this);
     this.editDialogDone = this.editDialogDone.bind(this);
+    this.onTransactionsChange = this.onTransactionsChange.bind(this);
   }
   componentDidMount() {
-    fetch("/transaction").then(r => r.json()).then(ts => this.setTransactions(ts));
+    transaction.watch(this.onTransactionsChange);
   }
-  setTransactions(txs) {
-    this.setState({ transactions: txs.map(confirmed) });
+  componentWillUnmount() {
+    transaction.unwatch(this.onTransactionsChange);
+  }
+  onTransactionsChange(txs) {
+    this.setState({transactions: txs});
   }
   addTransaction(tx) {
-    this.setState({ transactions: this.state.transactions.concat(tx) });
-    fetch('/transaction/new', {
-      method: 'POST',
-      body: JSON.stringify(tx),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    }).then(r => {
-      if (r.ok)
-        this.setState({ transactions: this.state.transactions.map(t => t == tx ? confirmed(t) : t) });
-      else
-        throw new Error('Network response was not ok.');
-    });
-    // TODO stop pending fetches on unmount
+    transaction.put(tx);
   }
   editTransaction(tx) {
     this.setState({ editing: tx });
