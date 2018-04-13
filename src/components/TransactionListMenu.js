@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Button } from 'reactstrap';
-import NewTransactionDialog from './NewTransactionDialog';
+import TransactionDialog from './TransactionDialog';
 
 export default class TransactionListMenu extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ export default class TransactionListMenu extends Component {
             <Button onClick={this.showAddDialog}>Add</Button>
           </Col>
         </Row>
-        <NewTransactionDialog isOpen={this.state.adding} done={this.addDialogDone}/>
+        <TransactionDialog isOpen={this.state.adding} done={this.addDialogDone}/>
       </div>
     );
   }

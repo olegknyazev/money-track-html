@@ -24,7 +24,7 @@ export default class TransactionForm extends Component {
         <FormGroup row>
           <Label for="date" sm={labelColumns}>Date</Label>
           <Col sm={contentColumns}>
-            <Input type="date" name="date" id="date" value={tx.date} />
+            <Input type="datetime" name="date" id="date" value={tx.date} />
           </Col>
         </FormGroup>
         <FormGroup row>

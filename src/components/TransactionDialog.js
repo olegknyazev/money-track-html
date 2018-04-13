@@ -16,14 +16,19 @@ function emptyTransaction() {
   };
 }
 
-export default class NewTransactionDialog extends Component {
+export default class TransactionDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { tx: emptyTransaction() };
+    this.state = { tx: props.tx || emptyTransaction() };
     this.done = this.done.bind(this);
     this.cancel = this.cancel.bind(this);
     this.save = this.save.bind(this);
     this.onTransactionChange = this.onTransactionChange.bind(this);
+  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return (!prevState || !prevState.tx) ? null : {
+      tx: nextProps.tx || emptyTransaction()
+    };
   }
   done(result) {
     this.props.done && this.props.done(result);
@@ -42,7 +47,7 @@ export default class NewTransactionDialog extends Component {
     const contentColumns = 12 - labelColumns;
     return (
       <Modal isOpen={this.props.isOpen} toggle={this.cancel} centered={true} fade={false}>
-        <ModalHeader toggle={this.cancel}>New transaction</ModalHeader>
+        <ModalHeader toggle={this.cancel}>{this.props.tx ? 'Edit transaction' : 'New transaction'}</ModalHeader>
         <ModalBody>
           <TransactionForm tx={this.state.tx} onChange={this.onTransactionChange}/>
         </ModalBody>
