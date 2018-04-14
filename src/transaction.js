@@ -28,14 +28,16 @@ function newId() { return --lastNewId; }
 
 function toJSON(tx) { return JSON.stringify(serverSide(tx).toJSON()); }
 
-function fetchTransaction(method, endpoint, tx) {
-  return fetch(endpoint, {
+function fetchTransaction(method, endpoint, tx = null) {
+  let options = {
     method,
-    body: toJSON(tx),
     headers: new Headers({
       'Content-Type': 'application/json'
     })
-  });
+  };
+  if (tx)
+    options.body = toJSON(tx);
+  return fetch(endpoint, options);
 }
 
 export default {
@@ -65,6 +67,14 @@ export default {
     setTransactions(transactions.map(t => t.get('id') == id ? tx : t));
     (fetchTransaction('PUT', `/transaction/${id}`, tx)
       .then(_ => transactions.map(t => t.get('id') == id ? confirmed(t) : t))
+      .then(setTransactions));
+  },
+
+  delete(id) {
+    let tx = unconfirmed(transactions.find(t => t.get('id') == id));
+    setTransactions(transactions.map(t => t.get('id') == id ? tx : t));
+    (fetchTransaction('DELETE', `/transaction/${id}`)
+      .then(_ => transactions.filter(t => t.get('id') != id))
       .then(setTransactions));
   }
 };

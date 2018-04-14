@@ -23,6 +23,7 @@ export default class TransactionDialog extends Component {
     this.state = { tx: props.tx || emptyTransaction() };
     this.done = this.done.bind(this);
     this.cancel = this.cancel.bind(this);
+    this.delete = this.delete.bind(this);
     this.save = this.save.bind(this);
     this.onTransactionChange = this.onTransactionChange.bind(this);
   }
@@ -37,8 +38,11 @@ export default class TransactionDialog extends Component {
   cancel() {
     this.done(false);
   }
+  delete() {
+    this.done({op: 'DELETE', id: this.props.tx.get('id')});
+  }
   save() {
-    this.done(this.state.tx);
+    this.done({op: 'UPDATE', tx: this.state.tx});
   }
   onTransactionChange(tx) {
     this.setState({ tx });
@@ -54,6 +58,8 @@ export default class TransactionDialog extends Component {
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={this.cancel}>Cancel</Button>{' '}
+          {this.props.tx && this.props.tx.has('id') &&
+            [<Button color="danger" onClick={this.delete}>Delete</Button>, ' ']}
           <Button color="primary" onClick={this.save}>Save</Button>
         </ModalFooter>
       </Modal>

@@ -44,7 +44,14 @@ export default class TransactionList extends Component {
   }
   editDialogDone(result) {
     if (result)
-      transaction.update(result);
+      switch (result.op) {
+        case 'DELETE':
+          transaction.delete(result.id);
+          break;
+        case 'UPDATE':
+          transaction.update(result.tx);
+          break
+      }
     this.setState({ editing: false });
   }
   render() {
