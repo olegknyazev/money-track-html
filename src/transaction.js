@@ -1,10 +1,12 @@
-import { set } from 'immutable';
+import { set, remove } from 'immutable';
 
 function confirmed(tx) { return set(tx, 'confirmed', true); }
-function isExisting(tx) { return 'id' in tx; }
+function unconfirmed(tx) { return set(tx, 'confirmed', false); }
+function serverSide(tx) { return remove(remove(tx, 'confirmed'), 'id'); }
 
 let transactions = [];
 let watchers = [];
+let lastNewId = 0;
 
 function setTransactions(txs) {
   transactions = txs;
@@ -19,6 +21,8 @@ function initialFetch() {
     .then(setTransactions);
 }
 
+function newId() { return --lastNewId; }
+
 export default {
   watch(handler) {
     watchers.push(handler);
@@ -29,23 +33,18 @@ export default {
     watchers.pop(handler);
   },
 
-  put(tx) {
-    if (isExisting(tx)) {
-      setTransactions(transactions.map(t => t.id == tx.id ? tx : t));
-    } else {
-      setTransactions(transactions.concat(tx));
-      fetch('/transaction/new', {
-        method: 'POST',
-        body: JSON.stringify(tx),
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        })
-      }).then(r => {
-        if (r.ok)
-          setTransactions(transactions.map(t => t == tx ? confirmed(t) : t));
-        else
-          throw new Error('Network response was not ok.');
-      });
-    }
+  new(tx) {
+    let id = newId();
+    tx.id = id;
+    tx = unconfirmed(tx);
+    setTransactions(transactions.concat(tx));
+    fetch('/transaction/new', {
+      method: 'POST',
+      body: JSON.stringify(serverSide(tx)),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    }).then(r => r.json())
+    .then(tx => setTransactions(transactions.map(t => t.id == id ? confirmed(tx) : t)));
   }
 };
