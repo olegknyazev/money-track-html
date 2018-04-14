@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Form, FormGroup, Label, Col, Input } from 'reactstrap';
-import { set } from 'immutable';
 
 function coerceTransaction(tx) {
-  return set(tx, 'amount', Number(tx.amount));
+  return tx.set('amount', Number(tx.get('amount')));
 }
 
 export default class TransactionForm extends Component {
@@ -12,7 +11,7 @@ export default class TransactionForm extends Component {
     this.onChange = this.onChange.bind(this);
   }
   onChange(ev) {
-    const newTx = coerceTransaction(set(this.props.tx, ev.target.name, ev.target.value));
+    const newTx = coerceTransaction(this.props.tx.set(ev.target.name, ev.target.value));
     this.props.onChange(newTx);
   }
   render() {
@@ -24,25 +23,25 @@ export default class TransactionForm extends Component {
         <FormGroup row>
           <Label for="date" sm={labelColumns}>Date</Label>
           <Col sm={contentColumns}>
-            <Input type="datetime" name="date" id="date" value={tx.date} />
+            <Input type="datetime" name="date" id="date" value={tx.get('date')} />
           </Col>
         </FormGroup>
         <FormGroup row>
           <Label for="merchant" sm={labelColumns}>Merchant</Label>
           <Col sm={contentColumns}>
-            <Input type="text" name="merchant" id="merchant" value={tx.merchant} />
+            <Input type="text" name="merchant" id="merchant" value={tx.get('merchant')} />
           </Col>
         </FormGroup>
         <FormGroup row>
           <Label for="amount" sm={labelColumns}>Amount</Label>
           <Col sm={contentColumns}>
-            <Input type="number" name="amount" id="amount" value={tx.amount} />
+            <Input type="number" name="amount" id="amount" value={tx.get('amount')} />
           </Col>
         </FormGroup>
         <FormGroup row>
           <Label for="comment" sm={labelColumns}>Commentary</Label>
           <Col sm={contentColumns}>
-            <Input type="textarea" name="comment" id="comment" value={tx.comment} />
+            <Input type="textarea" name="comment" id="comment" value={tx.get('comment')} />
           </Col>
         </FormGroup>
       </Form>

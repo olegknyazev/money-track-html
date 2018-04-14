@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from 'reactstrap';
+import { Map } from 'immutable';
 import TransactionList from './TransactionList';
 import TransactionForm from './TransactionForm';
 
@@ -8,12 +9,12 @@ function currentDate() {
 }
 
 function emptyTransaction() {
-  return {
+  return Map({
     merchant: '',
     amount: 0,
     date: currentDate(),
     comment: ''
-  };
+  });
 }
 
 export default class TransactionDialog extends Component {

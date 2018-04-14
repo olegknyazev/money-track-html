@@ -1,8 +1,10 @@
-import { set, remove } from 'immutable';
+import { Map, fromJS } from 'immutable';
 
-function confirmed(tx) { return set(tx, 'confirmed', true); }
-function unconfirmed(tx) { return set(tx, 'confirmed', false); }
-function serverSide(tx) { return remove(remove(tx, 'confirmed'), 'id'); }
+const CLIENT_SIDE_KEYS = ['confirmed', 'id'];
+
+function confirmed(tx) { return tx.set('confirmed', true); }
+function unconfirmed(tx) { return tx.set('confirmed', false); }
+function serverSide(tx) { return tx.deleteAll(CLIENT_SIDE_KEYS); }
 
 let transactions = [];
 let watchers = [];
@@ -17,6 +19,7 @@ function setTransactions(txs) {
 function initialFetch() {
   fetch("/transaction")
     .then(r => r.json())
+    .then(fromJS)
     .then(txs => txs.map(confirmed))
     .then(setTransactions);
 }
@@ -35,16 +38,17 @@ export default {
 
   new(tx) {
     let id = newId();
-    tx.id = id;
-    tx = unconfirmed(tx);
-    setTransactions(transactions.concat(tx));
+    tx = unconfirmed(tx).set('id', id);
+    setTransactions(transactions.push(tx));
     fetch('/transaction/new', {
-      method: 'POST',
-      body: JSON.stringify(serverSide(tx)),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
-    }).then(r => r.json())
-    .then(tx => setTransactions(transactions.map(t => t.id == id ? confirmed(tx) : t)));
+        method: 'POST',
+        body: JSON.stringify(serverSide(tx).toJSON()),
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      }).then(r => r.json())
+      .then(fromJS)
+      .then(tx => transactions.map(t => t.get('id') == id ? confirmed(tx) : t))
+      .then(setTransactions);
   }
 };

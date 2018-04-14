@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
 import { Container, Table, Row, Col, Button } from 'reactstrap';
-import { set } from 'immutable';
 import TransactionListMenu from './TransactionListMenu';
 import TransactionDialog from './TransactionDialog';
 import transaction from '../transaction';
 
 function TransactionRow({ tx, onClick }) {
   return (
-    <tr className={tx.confirmed ? null : 'text-muted'}
+    <tr className={tx.get('confirmed', false) ? null : 'text-muted'}
         onClick={onClick}>
-      <td>{tx.date}</td>
-      <td>{tx.merchant}</td>
-      <td>{tx.amount}</td>
+      <td>{tx.get('date')}</td>
+      <td>{tx.get('merchant')}</td>
+      <td>{tx.get('amount')}</td>
     </tr>
   );
-}
-
-function confirmed(tx) {
-  return set(tx, 'confirmed', true);
 }
 
 export default class TransactionList extends Component {
