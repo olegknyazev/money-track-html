@@ -43,9 +43,8 @@ export default class TransactionList extends Component {
     this.setState({ editing: tx });
   }
   editDialogDone(result) {
-    // TODO
-    //if (result)
-    //  transaction.put(result);
+    if (result)
+      transaction.update(result);
     this.setState({ editing: false });
   }
   render() {

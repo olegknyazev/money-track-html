@@ -26,6 +26,18 @@ function initialFetch() {
 
 function newId() { return --lastNewId; }
 
+function toJSON(tx) { return JSON.stringify(serverSide(tx).toJSON()); }
+
+function fetchTransaction(method, endpoint, tx) {
+  return fetch(endpoint, {
+    method,
+    body: toJSON(tx),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  });
+}
+
 export default {
   watch(handler) {
     watchers.push(handler);
@@ -40,15 +52,19 @@ export default {
     let id = newId();
     tx = unconfirmed(tx).set('id', id);
     setTransactions(transactions.push(tx));
-    fetch('/transaction/new', {
-        method: 'POST',
-        body: JSON.stringify(serverSide(tx).toJSON()),
-        headers: new Headers({
-          'Content-Type': 'application/json'
-        })
-      }).then(r => r.json())
+    (fetchTransaction('POST', '/transaction/new', tx)
+      .then(r => r.json())
       .then(fromJS)
       .then(tx => transactions.map(t => t.get('id') == id ? confirmed(tx) : t))
-      .then(setTransactions);
+      .then(setTransactions));
+  },
+
+  update(tx) {
+    tx = unconfirmed(tx);
+    let id = tx.get('id');
+    setTransactions(transactions.map(t => t.get('id') == id ? tx : t));
+    (fetchTransaction('PUT', `/transaction/${id}`, tx)
+      .then(_ => transactions.map(t => t.get('id') == id ? confirmed(t) : t))
+      .then(setTransactions));
   }
 };
