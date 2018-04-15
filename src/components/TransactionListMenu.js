@@ -15,7 +15,7 @@ export default class TransactionListMenu extends Component {
   addDialogDone(result) {
     this.setState({ adding: false });
     if (result)
-      this.props.onNewTransaction(result);
+      this.props.onNewTransaction(result.tx);
   }
   render() {
     return (
