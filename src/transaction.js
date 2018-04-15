@@ -6,6 +6,7 @@ function confirmed(tx) { return tx.set('confirmed', true); }
 function unconfirmed(tx) { return tx.set('confirmed', false); }
 function serverSide(tx) { return tx.deleteAll(CLIENT_SIDE_KEYS); }
 
+// Transactions are kept ordered by datetime
 let transactions = [];
 let watchers = [];
 let lastNewId = 0;
@@ -40,6 +41,10 @@ function fetchTransaction(method, endpoint, tx = null) {
   return fetch(endpoint, options);
 }
 
+function insertOrdered(coll, el) {
+  return coll.push(el).sortBy((tx, i) => tx.get('datetime'));
+}
+
 export default {
   watch(handler) {
     watchers.push(handler);
@@ -53,7 +58,7 @@ export default {
   new(tx) {
     let id = newId();
     tx = unconfirmed(tx).set('id', id);
-    setTransactions(transactions.push(tx));
+    setTransactions(insertOrdered(transactions, tx));
     (fetchTransaction('POST', '/transaction/new', tx)
       .then(r => r.json())
       .then(fromJS)
