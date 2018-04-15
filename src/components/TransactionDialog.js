@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalFooter, ModalBody, Button } from 'reactstrap';
 import { Map } from 'immutable';
-import TransactionList from './TransactionList';
 import TransactionForm from './TransactionForm';
 
 function currentDate() {
@@ -48,8 +47,6 @@ export default class TransactionDialog extends Component {
     this.setState({ tx });
   }
   render() {
-    const labelColumns = 3;
-    const contentColumns = 12 - labelColumns;
     return (
       <Modal isOpen={this.props.isOpen} toggle={this.cancel} centered={true} fade={false}>
         <ModalHeader toggle={this.cancel}>{this.props.tx ? 'Edit transaction' : 'New transaction'}</ModalHeader>

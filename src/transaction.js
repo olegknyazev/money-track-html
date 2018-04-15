@@ -1,4 +1,4 @@
-import { Map, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
 
 const CLIENT_SIDE_KEYS = ['confirmed', 'id'];
 
@@ -60,26 +60,27 @@ export default {
     tx = unconfirmed(tx).set('id', id);
     setTransactions(insertOrdered(transactions, tx));
     (fetchTransaction('POST', '/transaction/new', tx)
+      .catch(x => { console.log('ERROR'); return x; })
       .then(r => r.json())
       .then(fromJS)
-      .then(tx => transactions.map(t => t.get('id') == id ? confirmed(tx) : t))
+      .then(tx => transactions.map(t => t.get('id') === id ? confirmed(tx) : t))
       .then(setTransactions));
   },
 
   update(tx) {
     tx = unconfirmed(tx);
     let id = tx.get('id');
-    setTransactions(transactions.map(t => t.get('id') == id ? tx : t));
+    setTransactions(transactions.map(t => t.get('id') === id ? tx : t));
     (fetchTransaction('PUT', `/transaction/${id}`, tx)
-      .then(_ => transactions.map(t => t.get('id') == id ? confirmed(t) : t))
+      .then(_ => transactions.map(t => t.get('id') === id ? confirmed(t) : t))
       .then(setTransactions));
   },
 
   delete(id) {
-    let tx = unconfirmed(transactions.find(t => t.get('id') == id));
-    setTransactions(transactions.map(t => t.get('id') == id ? tx : t));
+    let tx = unconfirmed(transactions.find(t => t.get('id') === id));
+    setTransactions(transactions.map(t => t.get('id') === id ? tx : t));
     (fetchTransaction('DELETE', `/transaction/${id}`)
-      .then(_ => transactions.filter(t => t.get('id') != id))
+      .then(_ => transactions.filter(t => t.get('id') !== id))
       .then(setTransactions));
   }
 };

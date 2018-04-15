@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Table, Row, Col, Button } from 'reactstrap';
+import { Container, Table, Row } from 'reactstrap';
 import TransactionListMenu from './TransactionListMenu';
 import TransactionDialog from './TransactionDialog';
 import transaction from '../transaction';
@@ -50,7 +50,9 @@ export default class TransactionList extends Component {
           break;
         case 'UPDATE':
           transaction.update(result.tx);
-          break
+          break;
+        default:
+          throw new Error("Unknown operation type: " + result.op);
       }
     this.setState({ editing: false });
   }
