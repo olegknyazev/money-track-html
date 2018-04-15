@@ -12,7 +12,7 @@ function emptyTransaction() {
   return Map({
     merchant: '',
     amount: 0,
-    date: currentDate(),
+    datetime: currentDate(),
     comment: ''
   });
 }

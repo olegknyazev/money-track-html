@@ -8,7 +8,7 @@ function TransactionRow({ tx, onClick }) {
   return (
     <tr className={tx.get('confirmed', false) ? null : 'text-muted'}
         onClick={onClick}>
-      <td>{tx.get('date')}</td>
+      <td>{tx.get('datetime')}</td>
       <td>{tx.get('merchant')}</td>
       <td>{tx.get('amount')}</td>
     </tr>

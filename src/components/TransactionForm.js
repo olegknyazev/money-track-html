@@ -21,9 +21,9 @@ export default class TransactionForm extends Component {
     return (
       <Form onChange={this.onChange}>
         <FormGroup row>
-          <Label for="date" sm={labelColumns}>Date</Label>
+          <Label for="datetime" sm={labelColumns}>Date</Label>
           <Col sm={contentColumns}>
-            <Input type="datetime" name="date" id="date" value={tx.get('date')} />
+            <Input type="datetime" name="datetime" id="datetime" value={tx.get('datetime')} />
           </Col>
         </FormGroup>
         <FormGroup row>
