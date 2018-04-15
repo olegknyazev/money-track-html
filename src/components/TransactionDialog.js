@@ -5,7 +5,7 @@ import TransactionList from './TransactionList';
 import TransactionForm from './TransactionForm';
 
 function currentDate() {
-  return new Date().toISOString().slice(0, 10);
+  return new Date().toISOString();
 }
 
 function emptyTransaction() {
